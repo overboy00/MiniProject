@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "137739342405",
+    "project_id": "cstest-1222"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:137739342405:android:f9c9e5d7bbe8fb56",
+        "android_client_info": {
+          "package_name": "com.dgmong.miniproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD46-u4aKUypAZV1sdZwAz5uP0xeFQ8_eg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
