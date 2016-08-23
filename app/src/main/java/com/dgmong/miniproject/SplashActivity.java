@@ -260,7 +260,17 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void moveMainActivity() {
-        startActivity(new Intent(this, MainActivity.class));
+        User user = (User)getIntent().getSerializableExtra(ChatActivity.EXTRA_USER);
+        if (user == null) {
+            startActivity(new Intent(this, MainActivity.class));
+        } else {
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            mainIntent.putExtra(MainActivity.EXTRA_TAB_INDEX, MainActivity.TAB_CHAT);
+            Intent chatIntent = new Intent(this, ChatActivity.class);
+            chatIntent.putExtra(ChatActivity.EXTRA_USER, user);
+            Intent[] intents = {mainIntent, chatIntent};
+            startActivities(intents);
+        }
         finish();
     }
 

@@ -9,6 +9,7 @@ import com.dgmong.miniproject.MyApplication;
 import com.dgmong.miniproject.data.ChatContract;
 import com.dgmong.miniproject.data.User;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,6 +73,25 @@ public class DBManager extends SQLiteOpenHelper {
         return -1;
     }
 
+    public long getLastReceiveDate() {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] columns = {ChatContract.ChatMessage.COLUMN_CREATED};
+        String selection = ChatContract.ChatMessage.COLUMN_TYPE + " = ?";
+        String[] args = {"" + ChatContract.ChatMessage.TYPE_RECEIVE};
+        String orderBy = ChatContract.ChatMessage.COLUMN_CREATED + " DESC";
+        String limit = "1";
+        Cursor c = db.query(ChatContract.ChatMessage.TABLE, columns, selection, args, null, null, orderBy, limit);
+        try {
+            if (c.moveToNext()) {
+                long time = c.getLong(c.getColumnIndex(ChatContract.ChatMessage.COLUMN_CREATED));
+                return time;
+            }
+        } finally {
+            c.close();
+        }
+        return 0;
+    }
+
     ContentValues values = new ContentValues();
     public long addUser(User user) {
         if (getUserId(user.getId()) == -1) {
@@ -87,6 +107,9 @@ public class DBManager extends SQLiteOpenHelper {
 
     Map<Long, Long> resolveUserId = new HashMap<>();
     public long addMessage(User user, int type, String message) {
+        return addMessage(user, type, message, new Date());
+    }
+    public long addMessage(User user, int type, String message, Date date) {
         Long uid = resolveUserId.get(user.getId());
         if (uid == null) {
             long id = getUserId(user.getId());
@@ -102,7 +125,7 @@ public class DBManager extends SQLiteOpenHelper {
         values.put(ChatContract.ChatMessage.COLUMN_USER_ID, (long)uid);
         values.put(ChatContract.ChatMessage.COLUMN_TYPE, type);
         values.put(ChatContract.ChatMessage.COLUMN_MESSAGE, message);
-        long current = System.currentTimeMillis();
+        long current = date.getTime();
         values.put(ChatContract.ChatMessage.COLUMN_CREATED, current);
         try {
             db.beginTransaction();
